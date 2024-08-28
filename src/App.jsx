@@ -1,16 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import AddRoleModel from "./Components/AddRoleModel";
+import AggridComp from "./Components/AggridComp";
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-    <h1 className='text-red-300'>hello</h1>
-    </>
+   <div className="Parent p-2">
+      <div className="mb-3">
+        <AddRoleModel/>
+      </div>
+      <div>
+        <AggridComp/>
+      </div>
+   </div>
   )
 }
 
-export default App
+export default App;

@@ -4,10 +4,11 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import Model from "./Model";
 // import '../App.css';
+const CustomButton=()=>{
+  return <Model/>
+}
 const AggridComp = () => {
-    const CustomButton=()=>{
-        return <Model/>
-      }
+   
   const [rowData, setRowData] = useState([
     { "Role name": "Tesla", "Role type": "Model Y",  "Assigned to": true ,"Actions":"noaction"},
     { "Role name": "Ford", "Role type": "F-Series",  "Assigned to": false,"Actions":"noaction"},

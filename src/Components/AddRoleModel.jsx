@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Modal } from "antd";
 import StepsComp from "./StepsComp";
+
 const AddRoleModel = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -12,6 +13,7 @@ const AddRoleModel = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
   return (
     <>
       <Button type="primary" onClick={showModal}>
@@ -22,6 +24,8 @@ const AddRoleModel = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         closable={false}
+        footer={null}
+        width={800}
       >
         <StepsComp />
       </Modal>

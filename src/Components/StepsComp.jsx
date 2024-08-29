@@ -1,17 +1,20 @@
-import { useState } from 'react';
-import { Button, message, Steps, theme } from 'antd';
+import { useState } from "react";
+import { Button, message, Steps, theme } from "antd";
+import AddRole from "./AddRole";
+import SecurityConditions from "./SecurityConditions";
+import AssignedTo from "./AssignedTo";
 const steps = [
   {
-    title: 'First',
-    content: 'First-content',
+    title: "Add Role",
+    content: <AddRole/>,
   },
   {
-    title: 'Second',
-    content: 'Second-content',
+    title: "Security Conditions",
+    content: <SecurityConditions/>,
   },
   {
-    title: 'Last',
-    content: 'Last-content',
+    title: "Assigned To",
+    content: <AssignedTo/>,
   },
 ];
 const StepsComp = () => {
@@ -28,8 +31,9 @@ const StepsComp = () => {
     title: item.title,
   }));
   const contentStyle = {
-    lineHeight: '260px',
-    textAlign: 'center',
+    // lineHeight: "260px",
+    // textAlign: "center",
+    padding:"10px",
     color: token.colorTextTertiary,
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
@@ -43,26 +47,32 @@ const StepsComp = () => {
       <div
         style={{
           marginTop: 24,
+          display: "flex",
+          justifyContent: current > 0 ? "space-between" : "flex-end",
         }}
       >
+        {current > 0 && (
+          <Button
+            style={{
+              margin: "0 8px",
+              textAlign: "left",
+            }}
+            onClick={() => prev()}
+          >
+            Previous
+          </Button>
+        )}
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Done
-          </Button>
-        )}
-        {current > 0 && (
           <Button
-            style={{
-              margin: '0 8px',
-            }}
-            onClick={() => prev()}
+            type="primary"
+            onClick={() => message.success("Processing complete!")}
           >
-            Previous
+            Done
           </Button>
         )}
       </div>

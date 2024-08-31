@@ -1,13 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-export const gridSlice=createSlice({
+const initialState={
+    grid:[],
+}
+const gridSlice=createSlice({
     name:'Grid',
-    initialState:[],
+    initialState,
     reducers:{
-     
+     addGrid:(state,action)=>{
+      state.grid.push(action.payload);
+     }
     }
 })
 
-
+export const {addGrid}=gridSlice.actions;
 export default gridSlice.reducer;

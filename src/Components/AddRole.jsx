@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { Form, Input, Select } from "antd";
-const AddRole = () => {
-  const [inputValue, setInputValue] = useState("");
-  const { Option } = Select;
+const AddRole = ({ sendDatatoParent }) => {
+  const [addRoleorType, setAddRoleorType] = useState({
+    role: "",
+    roleType: "",
+  });
+  const handleChilddata = (name, value) => {
+    setAddRoleorType((prev) => {
+      const updatedField = { ...prev, [name]: value };
+      sendDatatoParent(updatedField);
+      return updatedField;
+    });
+  };
   return (
     <Form layout="vertical">
       <Form.Item
         label="Role name"
-        name="Role name"
+        name="role"
         rules={[
           {
             required: true,
@@ -18,9 +27,9 @@ const AddRole = () => {
       >
         <Input
           className="text-black font-normal"
-          value={inputValue}
+          value={addRoleorType.role}
           onChange={(e) => {
-            setInputValue(e.target.value);
+            handleChilddata("role", e.target.value);
           }}
         />
       </Form.Item>
@@ -35,11 +44,32 @@ const AddRole = () => {
         ]}
         className="text-black font-bold"
       >
-        <Select>
-          <Option value="male">male</Option>
-          <Option value="female">female</Option>
-          <Option value="other">other</Option>
-        </Select>
+        <Select
+          placeholder="select value"
+          options={[
+            {
+              value: "jack",
+              label: "Jack",
+            },
+            {
+              value: "lucy",
+              label: "Lucy",
+            },
+            {
+              value: "Yiminghe",
+              label: "yiminghe",
+            },
+            {
+              value: "disabled",
+              label: "Disabled",
+              disabled: true,
+            },
+          ]}
+          value={addRoleorType.role}
+          onChange={(Value) => {
+            handleChilddata("roleType", Value);
+          }}
+        />
       </Form.Item>
     </Form>
   );

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Select } from "antd";
-const AssignedTo = () => {
+const AssignedTo = ({sendDatatoParent}) => {
+  const[,setOptionValue]=useState('');
   const options = [
     {
       label: "@gmail.com",
@@ -14,6 +16,10 @@ const AssignedTo = () => {
       value: "@outlook.com",
     },
   ];
+  const handleChilddata=(Value)=>{
+    sendDatatoParent({assignedTo:Value});
+    setOptionValue(Value);
+  }
   return (
     <div className="Parent">
       <p className="text-black text-[1.1rem]">
@@ -23,6 +29,7 @@ const AssignedTo = () => {
         mode="multiple"
         className="w-full"
         placeholder="select users & groups only"
+        onChange={handleChilddata}
         options={options}
       />
     </div>

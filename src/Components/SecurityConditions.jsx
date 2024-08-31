@@ -1,35 +1,39 @@
 import { useState } from "react";
 import { Button } from "antd";
 import Group from "./Group";
+import Conditions from "./Conditions";
 
 const SecurityConditions = () => {
-  const [Groups, setGroups] = useState([]);
-
-  const addGroup = () => {
-    setGroups((prev) => [...prev, {}]);
+  const [Components, setComponents] = useState([]);
+  const addConditions = () => {
+    setComponents((prev) => [...prev, <Conditions key={prev.length} />]);
   };
-
-
+  const addGroup = () => {
+    setComponents((prev) => [...prev, <Group key={prev.length} />]);
+  };
   return (
-    <div className="Parent">
+    <div className="Parent overflow-auto">
       <div className="header flex justify-between mb-2">
         <h2 className="text-lg text-black">Security conditions</h2>
         <div className="flex gap-3">
-          <Button onClick={addGroup}>+Group</Button>
-          <Button>+Conditions</Button>
+          <Button
+            onClick={() => {
+              addGroup("Group");
+            }}
+          >
+            +Group
+          </Button>
+          <Button onClick={addConditions}>+Conditions</Button>
         </div>
       </div>
       <div className="content text-center">
-        {Groups.length === 0 ? (
+        {Components.length === 0 ? (
           <h2 className="text-lg">
-            Please click on Groups or Conditions or Expression button to create your filters.
+            Please click on Groups or Conditions or Expression button to create
+            your filters.
           </h2>
         ) : (
-          <div>
-            {Groups.map((_, index) => (
-              <Group key={index} />
-            ))}
-          </div>
+          Components
         )}
       </div>
     </div>

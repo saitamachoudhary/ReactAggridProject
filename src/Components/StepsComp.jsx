@@ -1,45 +1,76 @@
 import { useState } from "react";
-import { Button, message, Steps, theme } from "antd";
+import { nanoid } from "@reduxjs/toolkit";
+import { Button,Steps, theme } from "antd";
 import AddRole from "./AddRole";
 import SecurityConditions from "./SecurityConditions";
 import AssignedTo from "./AssignedTo";
-const steps = [
-  {
-    title: "Add Role",
-    content: <AddRole/>,
-  },
-  {
-    title: "Security Conditions",
-    content: <SecurityConditions/>,
-  },
-  {
-    title: "Assigned To",
-    content: <AssignedTo/>,
-  },
-];
+import { useDispatch } from "react-redux";
+import { addGrid } from "../Store/slice";
 const StepsComp = () => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const dispatch=useDispatch();
+  const [gridVal, setGridVal] = useState({
+    Rolename: "",
+    Roletype: "",
+    Condition: "EditorView",
+    Assignedto: [],
+    Actions: "Delete",
+  });
   const next = () => {
     setCurrent(current + 1);
   };
   const prev = () => {
     setCurrent(current - 1);
   };
-  const items = steps.map((item) => ({
-    key: item.title,
-    title: item.title,
-  }));
   const contentStyle = {
     // lineHeight: "260px",
     // textAlign: "center",
-    padding:"10px",
+    padding: "10px",
     color: token.colorTextTertiary,
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
   };
+  const handleDatafromChild = (newData) => {
+    if (newData.role && newData.roleType) {
+      setGridVal((prev) => ({
+        ...prev,
+        Rolename: newData.role,
+        Roletype: newData.roleType,
+      }));
+    } else if (newData.assignedTo) {
+      setGridVal((prev) => ({ ...prev, Assignedto: newData.assignedTo }));
+    } else {
+      setGridVal({
+        _id:nanoid(),
+        Rolename: "",
+        Roletype: "",
+        Condition: "EditorView",
+        Assignedto: [],
+        Actions: "Delete",
+      });
+    }
+  };
+  const steps = [
+    {
+      title: "Add Role",
+      content: <AddRole sendDatatoParent={handleDatafromChild} />,
+    },
+    {
+      title: "Security Conditions",
+      content: <SecurityConditions />,
+    },
+    {
+      title: "Assigned To",
+      content: <AssignedTo sendDatatoParent={handleDatafromChild} />,
+    },
+  ];
+  const items = steps.map((item) => ({
+    key: item.title,
+    title: item.title,
+  }));
   return (
     <>
       <Steps current={current} items={items} />
@@ -70,7 +101,7 @@ const StepsComp = () => {
         {current === steps.length - 1 && (
           <Button
             type="primary"
-            onClick={() => message.success("Processing complete!")}
+            onClick={() => dispatch(addGrid(gridVal))}
           >
             Done
           </Button>

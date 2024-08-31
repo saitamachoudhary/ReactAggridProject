@@ -2,38 +2,50 @@ import { useState } from "react";
 import { Button } from "antd";
 import Group from "./Group";
 import Conditions from "./Conditions";
+import { useDispatch, useSelector } from "react-redux";
+import { addgroups, addconditions } from "../Store/group&conditionSlice";
+import { CgChevronDoubleLeft } from "react-icons/cg";
 
 const SecurityConditions = () => {
-  const [Components, setComponents] = useState([]);
+  const dispatch = useDispatch();
+  const components = useSelector(state => state.groupConditon.groupconditions);
+
   const addConditions = () => {
-    setComponents((prev) => [...prev, <Conditions key={prev.length} />]);
+    dispatch(addconditions());
   };
+
   const addGroup = () => {
-    setComponents((prev) => [...prev, <Group key={prev.length} />]);
+    dispatch(addgroups());
   };
+
   return (
     <div className="Parent overflow-auto">
       <div className="header flex justify-between mb-2">
         <h2 className="text-lg text-black">Security conditions</h2>
         <div className="flex gap-3">
-          <Button
-            onClick={() => {
-              addGroup("Group");
-            }}
-          >
-            +Group
-          </Button>
+          <Button onClick={addGroup}>+Group</Button>
           <Button onClick={addConditions}>+Conditions</Button>
         </div>
       </div>
       <div className="content text-center">
-        {Components.length === 0 ? (
+        {components.length === 0 ? (
           <h2 className="text-lg">
             Please click on Groups or Conditions or Expression button to create
             your filters.
           </h2>
         ) : (
-          Components
+          components.map((component, index) => {
+            const { type, subconditions, id } = component;
+            if (type === 'group') {
+              return <Group key={id} />
+            }
+            else if (type === 'conditions') {
+              return <Conditions key={id} />
+            }
+            else {
+              return null;
+            }
+          })
         )}
       </div>
     </div>

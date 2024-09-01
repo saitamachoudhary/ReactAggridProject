@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "antd";
 import Conditions from "./Conditions";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addsubconditions } from "../Store/group&conditionSlice";
-const Group = () => {
-  // const [addConditions, setAddConditions] = useState([<Conditions key={0}/>]);
-  const dispatch=useDispatch();
-  const subconditions=useSelector(state=>state.groupConditon.groupconditions)
+const Group = ({ id }) => {
+  const dispatch = useDispatch();
+  const subconditions = useSelector(state => state.groupConditon.groupconditions.find(ele => ele.id === id).subconditions);
   const addSubconditions = () => {
-    dispatch(addsubconditions());
+    dispatch(addsubconditions({ id: id }));
   };
   return (
     <div className="GroupParent w-full border-2">
@@ -19,7 +17,9 @@ const Group = () => {
         </Button>
         <IoMdClose className="text-lg" />
       </div>
-      {addConditions}
+      {
+        subconditions.map(ele => <Conditions key={ele.id} />)
+      }
     </div>
   );
 };

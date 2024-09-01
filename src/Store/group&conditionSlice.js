@@ -13,8 +13,12 @@ export const groupconditionSlice = createSlice({
     addconditions: (state) => {
       state.groupconditions.push({ type: 'conditions', id: nanoid() })
     },
-    addsubconditions: (state) => {
-      state.groupconditions.subconditions.push({ type: 'subcondtions', id: nanoid() })
+    addsubconditions: (state, action) => {
+      const { id } = action.payload;
+      const item = state.groupconditions.find(ele => ele.id === id);
+      if (item) {
+        item.subconditions.push({ type: 'subcondtions', id: nanoid() })
+      }
     }
   }
 })

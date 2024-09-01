@@ -4,7 +4,6 @@ import Group from "./Group";
 import Conditions from "./Conditions";
 import { useDispatch, useSelector } from "react-redux";
 import { addgroups, addconditions } from "../Store/group&conditionSlice";
-import { CgChevronDoubleLeft } from "react-icons/cg";
 
 const SecurityConditions = () => {
   const dispatch = useDispatch();
@@ -34,13 +33,13 @@ const SecurityConditions = () => {
             your filters.
           </h2>
         ) : (
-          components.map((component, index) => {
+          components.map((component) => {
             const { type, subconditions, id } = component;
             if (type === 'group') {
-              return <Group key={id} />
+              return <Group key={id} id={id} />;
             }
             else if (type === 'conditions') {
-              return <Conditions key={id} />
+              return <Conditions key={id} />;
             }
             else {
               return null;

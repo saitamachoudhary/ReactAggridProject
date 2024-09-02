@@ -16,6 +16,7 @@ const StepsComp = () => {
     Condition: "EditorView",
     Assignedto: [],
     Actions: "Delete",
+    properties:0,
   });
   const next = () => {
     setCurrent(current + 1);
@@ -42,7 +43,11 @@ const StepsComp = () => {
       }));
     } else if (newData.assignedTo) {
       setGridVal((prev) => ({ ...prev, Assignedto: newData.assignedTo }));
-    } else {
+    }
+    else if(newData){
+      console.log(newData.id)
+    } 
+    else {
       setGridVal({
         _id:nanoid(),
         Rolename: "",
@@ -56,11 +61,11 @@ const StepsComp = () => {
   const steps = [
     {
       title: "Add Role",
-      content: <AddRole sendDatatoParent={handleDatafromChild} />,
+      content: <AddRole sendDatatoParent={handleDatafromChild} sendDatatochild={gridVal} />,
     },
     {
       title: "Security Conditions",
-      content: <SecurityConditions />,
+      content: <SecurityConditions sendDatatoParent={handleDatafromChild} />,
     },
     {
       title: "Assigned To",

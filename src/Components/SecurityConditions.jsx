@@ -1,19 +1,21 @@
-import { useState } from "react";
 import { Button } from "antd";
 import Group from "./Group";
 import Conditions from "./Conditions";
 import { useDispatch, useSelector } from "react-redux";
 import { addgroups, addconditions } from "../Store/group&conditionSlice";
 
-const SecurityConditions = () => {
+const SecurityConditions = ({sendDatatoParent}) => {
   const dispatch = useDispatch();
-  const components = useSelector(state => state.groupConditon.groupconditions);
-
+  const components = useSelector(
+    (state) => state.groupConditon.groupconditions
+  );
   const addConditions = () => {
+    sendDatatoParent({id:components.map(ele=>ele.id)});
     dispatch(addconditions());
   };
 
   const addGroup = () => {
+    sendDatatoParent({id:components.id});
     dispatch(addgroups());
   };
 
@@ -34,14 +36,12 @@ const SecurityConditions = () => {
           </h2>
         ) : (
           components.map((component) => {
-            const { type, subconditions, id } = component;
-            if (type === 'group') {
+            const { type, id } = component;
+            if (type === "group") {
               return <Group key={id} id={id} />;
-            }
-            else if (type === 'conditions') {
-              return <Conditions key={id} />;
-            }
-            else {
+            } else if (type === "conditions") {
+              return <Conditions key={id} id={id} ele={component}/>;
+            } else {
               return null;
             }
           })

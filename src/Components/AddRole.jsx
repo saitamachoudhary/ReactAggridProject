@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState,useEffect} from "react";
 import { Form, Input, Select } from "antd";
-const AddRole = ({ sendDatatoParent }) => {
+const AddRole = ({ sendDatatoParent,sendDatatochild}) => {
   const [addRoleorType, setAddRoleorType] = useState({
-    role: "",
-    roleType: "",
+    role: sendDatatochild?.Rolename||"",
+    roleType: sendDatatochild?.Roletype||"",
   });
   const handleChilddata = (name, value) => {
     setAddRoleorType((prev) => {
@@ -12,8 +12,14 @@ const AddRole = ({ sendDatatoParent }) => {
       return updatedField;
     });
   };
+
   return (
-    <Form layout="vertical">
+    <Form layout="vertical"
+    initialValues={{
+      role: addRoleorType.role || "",
+      roleType: addRoleorType.roleType || "",
+    }}
+    >
       <Form.Item
         label="Role name"
         name="role"
@@ -27,7 +33,6 @@ const AddRole = ({ sendDatatoParent }) => {
       >
         <Input
           className="text-black font-normal"
-          value={addRoleorType.role}
           onChange={(e) => {
             handleChilddata("role", e.target.value);
           }}
@@ -35,7 +40,7 @@ const AddRole = ({ sendDatatoParent }) => {
       </Form.Item>
       <Form.Item
         label="Role Type"
-        name="Role Type"
+        name="roleType"
         rules={[
           {
             required: true,
@@ -65,7 +70,6 @@ const AddRole = ({ sendDatatoParent }) => {
               disabled: true,
             },
           ]}
-          value={addRoleorType.role}
           onChange={(Value) => {
             handleChilddata("roleType", Value);
           }}

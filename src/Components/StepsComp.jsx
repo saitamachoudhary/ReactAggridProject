@@ -1,4 +1,4 @@
-import { useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import { Button, Steps, theme } from "antd";
 import AddRole from "./AddRole";
@@ -7,7 +7,7 @@ import AssignedTo from "./AssignedTo";
 import { useDispatch, useSelector } from "react-redux";
 import { addGrid } from "../Store/slice";
 import { makegroupconditionsEmpty } from "../Store/group&conditionSlice";
-const StepsComp = ({closeModal}) => {
+const StepsComp = ({ closeModal }) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const dispatch = useDispatch();
@@ -20,14 +20,23 @@ const StepsComp = ({closeModal}) => {
     Condition: "EditorView",
     Assignedto: [],
     Actions: "Delete",
-    SecurityConditions:[],
+    SecurityConditions: [],
     _id: nanoid(),
   });
-  useEffect(()=>{
-    if(gridVal.SecurityConditions.length>0){
+  useEffect(() => {
+    if (gridVal.SecurityConditions.length > 0) {
       dispatch(addGrid(gridVal));
+      setGridVal({
+        _id: nanoid(),
+        Rolename: "",
+        Roletype: "",
+        Condition: "EditorView",
+        Assignedto: [],
+        Actions: "Delete",
+        SecurityConditions: [], 
+      });
     }
-  },[gridVal,dispatch])
+  }, [gridVal, dispatch]);
   const next = () => {
     setCurrent(current + 1);
   };
@@ -119,10 +128,11 @@ const StepsComp = ({closeModal}) => {
           <Button
             type="primary"
             onClick={() => {
-            setGridVal((Prev) => ({
+              setGridVal((Prev) => ({
                 ...Prev,
                 SecurityConditions: securityConditions,
               }));
+              setCurrent(0);
               dispatch(makegroupconditionsEmpty());
               closeModal();
             }}

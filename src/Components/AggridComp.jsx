@@ -4,7 +4,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import Model from "./Model";
 import { useSelector } from "react-redux";
-import { Button } from "antd";
+import AssignedModel from "./AssignedModel";
 const CustomButton = (e) => {
   return <Model _id={e.data._id} />;
 };
@@ -19,11 +19,7 @@ const AggridComp = () => {
       flex: 1,
       cellRenderer: (params) => {
         return params.data.Assignedto.map((ele, index) => {
-          return (
-            <Button className="p-1 text-xs" key={index}>
-              {ele}
-            </Button>
-          );
+          return <AssignedModel key={index} prop={ele} _id={params.data._id} />;
         });
       },
     },

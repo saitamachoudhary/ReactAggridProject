@@ -6,6 +6,7 @@ import { addsubconditions,deleteGroups} from "../Store/group&conditionSlice";
 const Group = ({ id }) => {
   const dispatch = useDispatch();
   const subconditions = useSelector(state => state.groupConditon.groupconditions.find(ele => ele.id === id).subconditions);
+  // const psubconditions=useSelector(state=>state.grid.grid.find(ele=>ele));
   const addSubconditions = () => {
     dispatch(addsubconditions({ id: id }));
   };

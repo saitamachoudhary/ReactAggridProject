@@ -78,6 +78,7 @@ export const groupconditionSlice = createSlice({
       state.groupconditions=state.groupconditions.filter(ele=>ele.id!==id);
      }
      else{
+      console.log(id);
       state.groupconditions.forEach((subcon)=>{
         subcon.subconditions=subcon.subconditions.filter(ele=>(ele.id!==id))
       })

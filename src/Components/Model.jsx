@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Button, Modal } from "antd";
-import { useSelector,useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Group from "./Group";
 import Conditions from "./Conditions";
-import { makegroupconditionsFill } from "../Store/group&conditionSlice";
+import { makegroupconditionsFill,makegroupconditionsEmpty} from "../Store/group&conditionSlice";
 import { addgroups, addconditions } from "../Store/group&conditionSlice";
+import { editconditionorgroup } from "../Store/slice";
 const Model = ({ _id }) => {
   const [open, setOpen] = useState(false);
-  const components = useSelector(
+  const Pcomponents = useSelector(
     (state) => state.grid.grid.find((ele) => ele._id === _id).SecurityConditions
   );
-  const dispatch=useDispatch();
+  const components = useSelector(
+    (state) => state.groupConditon.groupconditions
+  );
+  const dispatch = useDispatch();
   const addConditions = () => {
     dispatch(addconditions());
   };
@@ -29,29 +33,29 @@ const Model = ({ _id }) => {
   );
   return (
     <>
-      <Button className="p-1 text-xs" onClick={() =>{
-        dispatch(makegroupconditionsFill(components));
-        setOpen(true);
-      }}>
+      <Button
+        className="p-1 text-xs"
+        onClick={() => {
+          dispatch(makegroupconditionsFill(Pcomponents));
+          setOpen(true);
+        }}
+      >
         EditorView
       </Button>
       <Modal
         title={titleComp}
         centered
         open={open}
-        onOk={() => setOpen(false)}
+        onOk={() => {
+          dispatch(editconditionorgroup({_id:_id,components:components}));
+          dispatch(makegroupconditionsEmpty());
+          setOpen(false);
+        }}
         onCancel={() => setOpen(false)}
         width={1000}
         closable={false}
       >
         <div className="Parent overflow-auto">
-          {/* <div className="header flex justify-between mb-2">
-            <h2 className="text-lg text-black">Security conditions</h2>
-            <div className="flex gap-3">
-              <Button onClick={addGroup}>+Group</Button>
-              <Button onClick={addConditions}>+Conditions</Button>
-            </div>
-          </div> */}
           <div className="content text-center">
             {components.length === 0 ? (
               <h2 className="text-lg">

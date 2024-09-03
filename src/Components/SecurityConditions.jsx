@@ -4,18 +4,16 @@ import Conditions from "./Conditions";
 import { useDispatch, useSelector } from "react-redux";
 import { addgroups, addconditions } from "../Store/group&conditionSlice";
 
-const SecurityConditions = ({sendDatatoParent}) => {
+const SecurityConditions = () => {
   const dispatch = useDispatch();
   const components = useSelector(
     (state) => state.groupConditon.groupconditions
   );
   const addConditions = () => {
-    sendDatatoParent({id:components.map(ele=>ele.id)});
     dispatch(addconditions());
   };
 
   const addGroup = () => {
-    sendDatatoParent({id:components.id});
     dispatch(addgroups());
   };
 

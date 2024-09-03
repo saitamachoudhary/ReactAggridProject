@@ -7,6 +7,9 @@ const AddRoleModel = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+  const closeModal=()=>{
+    setIsModalOpen(false);
+  }
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -27,7 +30,7 @@ const AddRoleModel = () => {
         footer={null}
         width={800}
       >
-        <StepsComp />
+        <StepsComp closeModal={closeModal} />
       </Modal>
     </>
   );

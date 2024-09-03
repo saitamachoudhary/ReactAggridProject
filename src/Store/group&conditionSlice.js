@@ -7,6 +7,12 @@ export const groupconditionSlice = createSlice({
   name: "group&conditionSlice",
   initialState,
   reducers: {
+    makegroupconditionsEmpty:(state)=>{
+     state.groupconditions=[];
+    },
+    makegroupconditionsFill:(state,action)=>{
+     state.groupconditions=action.payload;
+    },
     addgroups: (state) => {
       state.groupconditions.push({
         type: "group",
@@ -87,5 +93,7 @@ export const {
   addconditonsvalues,
   deleteGroups,
   deleteconditions,
+  makegroupconditionsEmpty,
+  makegroupconditionsFill,
 } = groupconditionSlice.actions;
 export default groupconditionSlice.reducer;

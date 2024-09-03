@@ -3,36 +3,30 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import Model from "./Model";
-// import '../App.css';
-const CustomButton = () => {
-  return <Model />;
+import { useSelector } from "react-redux";
+import { Button } from "antd";
+const CustomButton = (e) => {
+  return <Model _id={e.data._id} />;
 };
 const AggridComp = () => {
-  const [rowData, setRowData] = useState([
-    {
-      "Role name": "Tesla",
-      "Role type": "Model Y",
-      "Assigned to": true,
-      Actions: "noaction",
-    },
-    {
-      "Role name": "Ford",
-      "Role type": "F-Series",
-      "Assigned to": false,
-      Actions: "noaction",
-    },
-    {
-      "Role name": "Toyota",
-      "Role type": "Corolla",
-      "Assigned to": false,
-      Actions: "noaction",
-    },
-  ]);
+  const rowData = useSelector((state) => state.grid.grid);
   const [colDefs, setColDefs] = useState([
-    { field: "Role name", flex: 1 },
-    { field: "Role type", flex: 1 },
+    { field: "Rolename", flex: 1 },
+    { field: "Roletype", flex: 1 },
     { field: "Conditions", flex: 1, cellRenderer: CustomButton },
-    { field: "Assigned to", flex: 1 },
+    {
+      field: "Assigned to",
+      flex: 1,
+      cellRenderer: (params) => {
+        return params.data.Assignedto.map((ele, index) => {
+          return (
+            <Button className="p-1 text-xs" key={index}>
+              {ele}
+            </Button>
+          );
+        });
+      },
+    },
     { field: "Actions", flex: 1 },
   ]);
   return (

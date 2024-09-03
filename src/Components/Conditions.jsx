@@ -1,11 +1,14 @@
 import { Select, InputNumber } from "antd";
-import { useState} from "react";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import { addconditonsvalues,deleteconditions} from "../Store/group&conditionSlice";
+import {
+  addconditonsvalues,
+  deleteconditions,
+} from "../Store/group&conditionSlice";
 import { useDispatch } from "react-redux";
-const Conditions = ({id,ele}) => {
+const Conditions = ({ id, ele }) => {
   const [manipuldateFormele, setManipuldateFormele] = useState(false);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const options1 = [
     {
       value: "State",
@@ -80,7 +83,9 @@ const Conditions = ({id,ele}) => {
     } else if (Value === "Population" || Value === "Area") {
       setManipuldateFormele(false);
     }
-    dispatch(addconditonsvalues({id:id,key:'optionsValue1',value:Value}))
+    dispatch(
+      addconditonsvalues({ id: id, key: "optionsValue1", value: Value })
+    );
   };
   return (
     <div className="w-full p-2 flex items-center justify-between gap-2">
@@ -96,7 +101,9 @@ const Conditions = ({id,ele}) => {
           options={manipuldateFormele ? options2 : options3}
           value={ele.optionsValue2}
           onChange={(Value) => {
-            dispatch(addconditonsvalues({id:id,key:'optionsValue2',value:Value}))
+            dispatch(
+              addconditonsvalues({ id: id, key: "optionsValue2", value: Value })
+            );
           }}
         />
         {manipuldateFormele ? (
@@ -105,7 +112,13 @@ const Conditions = ({id,ele}) => {
             options={stateOptions}
             value={ele.optionSelectorInput}
             onChange={(Value) => {
-              dispatch(addconditonsvalues({id:id,key:'optionSelectorInput',value:Value}))
+              dispatch(
+                addconditonsvalues({
+                  id: id,
+                  key: "optionSelectorInput",
+                  value: Value,
+                })
+              );
             }}
           />
         ) : (
@@ -113,12 +126,23 @@ const Conditions = ({id,ele}) => {
             className="w-full"
             value={ele.optionSelectorInput}
             onChange={(Value) => {
-              dispatch(addconditonsvalues({id:id,key:'optionSelectorInput',value:Value}))
+              dispatch(
+                addconditonsvalues({
+                  id: id,
+                  key: "optionSelectorInput",
+                  value: Value,
+                })
+              );
             }}
           />
         )}
       </div>
-      <MdDelete className="text-red-400 text-lg" onClick={()=>{dispatch(deleteconditions({id:id}))}} />
+      <MdDelete
+        className="text-red-400 text-lg"
+        onClick={() => {
+          dispatch(deleteconditions({ id: id }));
+        }}
+      />
     </div>
   );
 };

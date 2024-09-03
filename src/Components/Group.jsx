@@ -10,7 +10,7 @@ const Group = ({ id }) => {
     dispatch(addsubconditions({ id: id }));
   };
   const handleDeletegroup=()=>{
-   dispatch(deleteGroups({id:id}))
+   dispatch(deleteGroups({id:id}));
   }
   return (
     <div className="GroupParent w-full border-2">

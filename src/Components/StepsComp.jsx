@@ -1,23 +1,33 @@
-import { useState } from "react";
+import { useState,useEffect} from "react";
 import { nanoid } from "@reduxjs/toolkit";
-import { Button,Steps, theme } from "antd";
+import { Button, Steps, theme } from "antd";
 import AddRole from "./AddRole";
 import SecurityConditions from "./SecurityConditions";
 import AssignedTo from "./AssignedTo";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addGrid } from "../Store/slice";
-const StepsComp = () => {
+import { makegroupconditionsEmpty } from "../Store/group&conditionSlice";
+const StepsComp = ({closeModal}) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
+  const securityConditions = useSelector(
+    (state) => state.groupConditon.groupconditions
+  );
   const [gridVal, setGridVal] = useState({
     Rolename: "",
     Roletype: "",
     Condition: "EditorView",
     Assignedto: [],
     Actions: "Delete",
-    properties:0,
+    SecurityConditions:[],
+    _id: nanoid(),
   });
+  useEffect(()=>{
+    if(gridVal.SecurityConditions.length>0){
+      dispatch(addGrid(gridVal));
+    }
+  },[gridVal,dispatch])
   const next = () => {
     setCurrent(current + 1);
   };
@@ -43,25 +53,27 @@ const StepsComp = () => {
       }));
     } else if (newData.assignedTo) {
       setGridVal((prev) => ({ ...prev, Assignedto: newData.assignedTo }));
-    }
-    else if(newData){
-      console.log(newData.id)
-    } 
-    else {
+    } else {
       setGridVal({
-        _id:nanoid(),
+        _id: nanoid(),
         Rolename: "",
         Roletype: "",
         Condition: "EditorView",
         Assignedto: [],
         Actions: "Delete",
+        SecurityConditions: [],
       });
     }
   };
   const steps = [
     {
       title: "Add Role",
-      content: <AddRole sendDatatoParent={handleDatafromChild} sendDatatochild={gridVal} />,
+      content: (
+        <AddRole
+          sendDatatoParent={handleDatafromChild}
+          sendDatatochild={gridVal}
+        />
+      ),
     },
     {
       title: "Security Conditions",
@@ -106,7 +118,14 @@ const StepsComp = () => {
         {current === steps.length - 1 && (
           <Button
             type="primary"
-            onClick={() => dispatch(addGrid(gridVal))}
+            onClick={() => {
+            setGridVal((Prev) => ({
+                ...Prev,
+                SecurityConditions: securityConditions,
+              }));
+              dispatch(makegroupconditionsEmpty());
+              closeModal();
+            }}
           >
             Done
           </Button>

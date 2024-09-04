@@ -2,11 +2,27 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
+import { Button } from "antd";
 import Model from "./Model";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AssignedModel from "./AssignedModel";
+import { deleteGriddata } from "../Store/slice";
+
 const CustomButton = (e) => {
   return <Model _id={e.data._id} />;
+};
+const Deletebutton = (e) => {
+  const dispatch = useDispatch();
+  return (
+    <Button
+      className="text-xs p-0"
+      onClick={() => {
+        dispatch(deleteGriddata(e.data._id));
+      }}
+    >
+      {e.data.Actions}
+    </Button>
+  );
 };
 const AggridComp = () => {
   const rowData = useSelector((state) => state.grid.grid);
@@ -23,7 +39,7 @@ const AggridComp = () => {
         });
       },
     },
-    { field: "Actions", flex: 1 },
+    { field: "Actions", flex: 1, cellRenderer: Deletebutton },
   ]);
   return (
     <div className="ag-theme-quartz h-96">

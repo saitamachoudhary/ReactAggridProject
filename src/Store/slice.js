@@ -23,9 +23,15 @@ const gridSlice = createSlice({
          if(item){
             item.Assignedto=dDvalue;
          }
+        },
+        deleteGriddata:(state,action)=>{
+          const item=state.grid.find(ele=>ele._id===action.payload);
+          if(item){
+            state.grid=state.grid.filter(ele=>ele._id!==action.payload);
+          }
         }
     }
 })
 
-export const { addGrid,editconditionorgroup,editdropdown} = gridSlice.actions;
+export const { addGrid,editconditionorgroup,editdropdown,deleteGriddata} = gridSlice.actions;
 export default gridSlice.reducer;

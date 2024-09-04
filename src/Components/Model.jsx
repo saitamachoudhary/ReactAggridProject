@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { Button, Modal } from "antd";
+import { Button, Modal, notification } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import Group from "./Group";
 import Conditions from "./Conditions";
-import { makegroupconditionsFill,makegroupconditionsEmpty} from "../Store/group&conditionSlice";
-import { addgroups, addconditions } from "../Store/group&conditionSlice";
+import {
+  makegroupconditionsFill,
+  makegroupconditionsEmpty,
+  addgroups,
+  addconditions,
+} from "../Store/group&conditionSlice";
 import { editconditionorgroup } from "../Store/slice";
 const Model = ({ _id }) => {
   const [open, setOpen] = useState(false);
-  const Pcomponents = useSelector(
-    (state) => state.grid.grid.find((ele) => ele._id === _id).SecurityConditions
-  );
+  const Pcomponents = useSelector((state) => {
+    const gridElement = state.grid.grid.find((ele) => ele._id === _id);
+    return gridElement ? gridElement.SecurityConditions : [];
+  });
   const components = useSelector(
     (state) => state.groupConditon.groupconditions
   );
@@ -47,11 +52,54 @@ const Model = ({ _id }) => {
         centered
         open={open}
         onOk={() => {
-          dispatch(editconditionorgroup({_id:_id,components:components}));
+          let allConditionsValid = true;
+          components.forEach((ele) => {
+            if (ele.type === "conditions") {
+              if (
+                ele.optionSelectorInput === "" ||
+                ele.optionsValue1 === "" ||
+                ele.optionsValue2 === ""
+              ) {
+                allConditionsValid = false;
+              }
+            } else if (ele.type === "group") {
+              const { subconditions } = ele;
+              let allSubConditionsValid = true;
+
+              subconditions.forEach((subCondition) => {
+                if (
+                  subCondition.optionSelectorInput === "" ||
+                  subCondition.optionsValue1 === "" ||
+                  subCondition.optionsValue2 === ""
+                ) {
+                  allSubConditionsValid = false;
+                }
+              });
+
+              if (!allSubConditionsValid) {
+                allConditionsValid = false;
+              }
+            }
+          });
+          if (allConditionsValid) {
+            dispatch(
+              editconditionorgroup({ _id: _id, components: components })
+            );
+            dispatch(makegroupconditionsEmpty());
+            setOpen(false);
+          } else {
+            notification.info({
+              message: "Validation Error",
+              description:
+                "Please fill in all required fields before proceeding.",
+              placement: "topRight",
+            });
+          }
+        }}
+        onCancel={() => {
           dispatch(makegroupconditionsEmpty());
           setOpen(false);
         }}
-        onCancel={() => setOpen(false)}
         width={1000}
         closable={false}
       >
@@ -66,7 +114,7 @@ const Model = ({ _id }) => {
               components.map((component) => {
                 const { type, id } = component;
                 if (type === "group") {
-                  return <Group key={id} id={id} />;
+                  return <Group key={id} id={id} _idP={_id} />;
                 } else if (type === "conditions") {
                   return <Conditions key={id} id={id} ele={component} />;
                 } else {

@@ -3,10 +3,12 @@ import { Button } from "antd";
 import Conditions from "./Conditions";
 import { useDispatch, useSelector } from "react-redux";
 import { addsubconditions,deleteGroups} from "../Store/group&conditionSlice";
-const Group = ({ id }) => {
+const Group = ({ id,_idP}) => {
   const dispatch = useDispatch();
-  const subconditions = useSelector(state => state.groupConditon.groupconditions.find(ele => ele.id === id).subconditions);
-  // const psubconditions=useSelector(state=>state.grid.grid.find(ele=>ele));
+  const groupconditions = useSelector(state => state.groupConditon.groupconditions.find(ele => ele.id === id));
+  const subconditions=groupconditions?groupconditions.subconditions:undefined;
+  const fallbackSubconditions= useSelector(state => state.grid.grid.find(ele => ele._id === _idP)?.subconditions);
+  const finalSubconditions=subconditions||fallbackSubconditions||[];
   const addSubconditions = () => {
     dispatch(addsubconditions({ id: id }));
   };
@@ -22,7 +24,7 @@ const Group = ({ id }) => {
         <IoMdClose className="text-lg" onClick={handleDeletegroup}/>
       </div>
       {
-        subconditions.map(ele => <Conditions key={ele.id} id={ele.id} ele={ele}/>)
+        finalSubconditions.map(ele => <Conditions key={ele.id} id={ele.id} ele={ele}/>)
       }
     </div>
   );

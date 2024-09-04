@@ -1,4 +1,4 @@
-import { useState,useEffect} from "react";
+import { useState} from "react";
 import { Form, Input, Select } from "antd";
 const AddRole = ({ sendDatatoParent,sendDatatochild}) => {
   const [addRoleorType, setAddRoleorType] = useState({

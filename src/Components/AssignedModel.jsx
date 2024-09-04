@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, Modal, Select } from "antd";
+import { useState,useef} from "react";
+import { Button, Modal, Select,notification} from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { editdropdown } from "../Store/slice";
 
@@ -31,8 +31,12 @@ const AssignedModel = ({ prop, _id }) => {
     },
   ];
   const dropDownvalue = useSelector(
-    (state) => state.grid.grid.find((ele) => ele._id===_id).Assignedto
+    (state) => {
+      const gridElement=state.grid.grid.find((ele) => ele._id===_id);
+      return gridElement?gridElement.Assignedto:[];
+    }
   );
+
   return (
     <>
       <Button onClick={showModal} className="p-0 text-xs">
@@ -42,8 +46,18 @@ const AssignedModel = ({ prop, _id }) => {
         title="Enter @ for users and # for groups"
         open={isModalOpen}
         onOk={() => {
-          dispatch(editdropdown({dDvalue:dDvalue,_id:_id}));
+           if(dDvalue.length!==0){
+            dispatch(editdropdown({dDvalue:dDvalue,_id:_id}));
           handleOk();
+           }
+           else{
+            notification.info({
+              message: "Validation Error",
+              description:
+                "Please fill in all required fields before proceeding.",
+              placement: "topRight",
+            });
+           }
         }}
         onCancel={handleCancel}
       >

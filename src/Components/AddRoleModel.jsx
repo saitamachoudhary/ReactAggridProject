@@ -4,8 +4,10 @@ import StepsComp from "./StepsComp";
 
 const AddRoleModel = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
   const showModal = () => {
     setIsModalOpen(true);
+    setRenderKey(renderKey + 1);
   };
   const closeModal=()=>{
     setIsModalOpen(false);
@@ -30,7 +32,7 @@ const AddRoleModel = () => {
         footer={null}
         width={800}
       >
-        <StepsComp closeModal={closeModal} />
+        <StepsComp key={renderKey} closeModal={closeModal} />
       </Modal>
     </>
   );

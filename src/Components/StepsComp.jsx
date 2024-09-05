@@ -10,41 +10,38 @@ import { makegroupconditionsEmpty } from "../Store/group&conditionSlice";
 const StepsComp = ({ closeModal }) => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [done, setdone] = useState(false);
+  const [validateCheck, setValidateCheck] = useState(false);
   const dispatch = useDispatch();
   const securityConditions = useSelector(
     (state) => state.groupConditon.groupconditions
   );
-  const [gridVal, setGridVal] = useState({
+  const createInitialGridVal = () => ({
     Rolename: "",
     Roletype: "",
-    Condition: "EditorView",
-    Assignedto: [],
-    Actions: "Delete",
     SecurityConditions: [],
+    Assignedto: [],
     _id: nanoid(),
+    Condition: "EditorView",
+    Actions: "Delete",
   });
+  const [gridVal, setGridVal] = useState(createInitialGridVal());
   useEffect(() => {
     if (gridVal.SecurityConditions.length > 0) {
       dispatch(addGrid(gridVal));
-      setGridVal({
-        _id: nanoid(),
-        Rolename: "",
-        Roletype: "",
-        Condition: "EditorView",
-        Assignedto: [],
-        Actions: "Delete",
-        SecurityConditions: [],
-      });
+      resetGridVal();
     }
-  }, [gridVal, dispatch, done]);
+  }, [gridVal.SecurityConditions.length, dispatch]);
+
+  const resetGridVal = () => {
+    setGridVal(createInitialGridVal());
+  };
   const next = () => {
     if (gridVal.Rolename !== "" && gridVal.Roletype !== "" && current === 0) {
       setCurrent(current + 1);
     } else if (securityConditions.length !== 0 && current === 1) {
       let allConditionsValid = true;
       securityConditions.forEach((ele) => {
-        if (ele.type === "conditions") {
+        if (ele && ele.type === "conditions") {
           if (
             ele.optionSelectorInput === "" ||
             ele.optionsValue1 === "" ||
@@ -52,7 +49,7 @@ const StepsComp = ({ closeModal }) => {
           ) {
             allConditionsValid = false;
           }
-        } else if (ele.type === "group") {
+        } else if (ele && ele.type === "group") {
           const { subconditions } = ele;
           let allSubConditionsValid = true;
 
@@ -81,11 +78,15 @@ const StepsComp = ({ closeModal }) => {
         });
       }
     } else {
-      notification.info({
-        message: "Validation Error",
-        description: "Please fill in all required fields before proceeding.",
-        placement: "topRight",
-      });
+      if (gridVal.Rolename === "" && gridVal.Roletype === "" && current === 0) {
+        setValidateCheck(true);
+      } else {
+        notification.info({
+          message: "Validation Error",
+          description: "Please fill in all required fields before proceeding.",
+          placement: "topRight",
+        });
+      }
     }
   };
   const prev = () => {
@@ -102,24 +103,16 @@ const StepsComp = ({ closeModal }) => {
     marginTop: 16,
   };
   const handleDatafromChild = (newData) => {
-    if (newData.role && newData.roleType) {
+    if (newData && newData.role && newData.roleType) {
       setGridVal((prev) => ({
         ...prev,
         Rolename: newData.role,
         Roletype: newData.roleType,
       }));
-    } else if (newData.assignedTo) {
+    } else if (newData && newData.assignedTo) {
       setGridVal((prev) => ({ ...prev, Assignedto: newData.assignedTo }));
     } else {
-      setGridVal({
-        _id: nanoid(),
-        Rolename: "",
-        Roletype: "",
-        Condition: "EditorView",
-        Assignedto: [],
-        Actions: "Delete",
-        SecurityConditions: [],
-      });
+      resetGridVal();
     }
   };
   const steps = [
@@ -129,6 +122,7 @@ const StepsComp = ({ closeModal }) => {
         <AddRole
           sendDatatoParent={handleDatafromChild}
           sendDatatochild={gridVal}
+          validateCheck={validateCheck}
         />
       ),
     },
@@ -168,30 +162,37 @@ const StepsComp = ({ closeModal }) => {
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={() => {
+                dispatch(makegroupconditionsEmpty());
+                closeModal();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit" onClick={() => next()}>
+              Next
+            </Button>
+          </div>
         )}
         {current === steps.length - 1 && (
           <Button
             type="primary"
             onClick={() => {
-              if (gridVal.Assignedto.length !== 0 && current === 2) {
-                setdone(true);
-                if (done) {
-                  setGridVal((Prev) => ({
-                    ...Prev,
-                    SecurityConditions: securityConditions,
-                  }));
-                  setCurrent(0);
-                  dispatch(makegroupconditionsEmpty());
-                  closeModal();
-                }
-              }
-              else{
+              if (gridVal.Assignedto.length > 0 && current === 2) {
+                setGridVal((prev) => ({
+                  ...prev,
+                  SecurityConditions: securityConditions,
+                }));
+                setCurrent(0);
+                dispatch(makegroupconditionsEmpty());
+                closeModal();
+              } else {
                 notification.info({
                   message: "Validation Error",
-                  description: "Please fill in all required fields before proceeding.",
+                  description:
+                    "Please fill in all required fields before proceeding.",
                   placement: "topRight",
                 });
               }

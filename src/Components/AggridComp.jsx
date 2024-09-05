@@ -26,7 +26,7 @@ const Deletebutton = (e) => {
 };
 const AggridComp = () => {
   const rowData = useSelector((state) => state.grid.grid);
-  const [colDefs, setColDefs] = useState([
+  const [colDefs,] = useState([
     { field: "Rolename", flex: 1 },
     { field: "Roletype", flex: 1 },
     { field: "Conditions", flex: 1, cellRenderer: CustomButton },

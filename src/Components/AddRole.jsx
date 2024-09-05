@@ -1,6 +1,6 @@
-import { useState} from "react";
+import { useState,useRef,useEffect} from "react";
 import { Form, Input, Select } from "antd";
-const AddRole = ({ sendDatatoParent,sendDatatochild}) => {
+const AddRole = ({ sendDatatoParent,sendDatatochild,validateCheck}) => {
   const [addRoleorType, setAddRoleorType] = useState({
     role: sendDatatochild?.Rolename||"",
     roleType: sendDatatochild?.Roletype||"",
@@ -13,8 +13,16 @@ const AddRole = ({ sendDatatoParent,sendDatatochild}) => {
     });
   };
 
+  const formRef=useRef(null);
+  
+  useEffect(()=>{
+   if(validateCheck){
+    formRef.current.validateFields();
+   }
+  },[validateCheck])
+
   return (
-    <Form layout="vertical"
+    <Form ref={formRef} layout="vertical"
     initialValues={{
       role: addRoleorType.role || "",
       roleType: addRoleorType.roleType || "",

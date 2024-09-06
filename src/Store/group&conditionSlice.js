@@ -7,11 +7,11 @@ export const groupconditionSlice = createSlice({
   name: "group&conditionSlice",
   initialState,
   reducers: {
-    makegroupconditionsEmpty:(state)=>{
-     state.groupconditions=[];
+    makegroupconditionsEmpty: (state) => {
+      state.groupconditions = [];
     },
-    makegroupconditionsFill:(state,action)=>{
-     state.groupconditions=action.payload;
+    makegroupconditionsFill: (state, action) => {
+      state.groupconditions = action.payload;
     },
     addgroups: (state) => {
       state.groupconditions.push({
@@ -24,8 +24,10 @@ export const groupconditionSlice = createSlice({
             optionsValue1: "",
             optionsValue2: "",
             optionSelectorInput: "",
+            conditionDropdownValue:"",
           },
         ],
+        groupDropdownValue: "",
       });
     },
     addconditions: (state) => {
@@ -69,22 +71,41 @@ export const groupconditionSlice = createSlice({
     },
     deleteGroups: (state, action) => {
       const { id } = action.payload;
-      state.groupconditions=state.groupconditions.filter(ele=>ele.id!==id);
+      state.groupconditions = state.groupconditions.filter(
+        (ele) => ele.id !== id
+      );
     },
-    deleteconditions:(state,action)=>{
-     const{id}=action.payload;
-     const findIndex=state.groupconditions.findIndex(ele=>ele.id===id);
-     if(findIndex!==-1){
-      state.groupconditions=state.groupconditions.filter(ele=>ele.id!==id);
-     }
-     else{
-      state.groupconditions.forEach((subcon)=>{
-        if (Array.isArray(subcon.subconditions)) {
-          subcon.subconditions = subcon.subconditions.filter(ele => (ele.id !== id));
-        }
-      })
-     }
-    }
+    deleteconditions: (state, action) => {
+      const { id } = action.payload;
+      const findIndex = state.groupconditions.findIndex((ele) => ele.id === id);
+      if (findIndex !== -1) {
+        state.groupconditions = state.groupconditions.filter(
+          (ele) => ele.id !== id
+        );
+      } else {
+        state.groupconditions.forEach((subcon) => {
+          if (Array.isArray(subcon.subconditions)) {
+            subcon.subconditions = subcon.subconditions.filter(
+              (ele) => ele.id !== id
+            );
+          }
+        });
+      }
+    },
+    addDropdownValue: (state, action) => {
+      const { id, value } = action.payload;
+      const item=state.groupconditions.find(ele=>ele.id===id);
+      if(item){
+        item.groupDropdownValue=value;
+      }
+      else{
+        state.groupconditions.forEach((ele)=>{
+          if(Array.isArray(ele.subconditions)){
+            ele.subconditions.find(itm=>itm.id===id).conditionDropdownValue=value;
+          } 
+        })
+      }
+    },
   },
 });
 
@@ -97,5 +118,6 @@ export const {
   deleteconditions,
   makegroupconditionsEmpty,
   makegroupconditionsFill,
+  addDropdownValue,
 } = groupconditionSlice.actions;
 export default groupconditionSlice.reducer;

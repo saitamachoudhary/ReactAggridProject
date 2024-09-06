@@ -6,6 +6,7 @@ import { editdropdown } from "../Store/slice";
 const AssignedModel = ({ prop, _id }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dDvalue, setDdvalue] = useState([]);
+  const [addOption, setAddOption] = useState([]);
   const dispatch = useDispatch();
   const showModal = () => {
     setIsModalOpen(true);
@@ -14,7 +15,7 @@ const AssignedModel = ({ prop, _id }) => {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen(false); 
   };
   const options = [
     {
@@ -28,6 +29,20 @@ const AssignedModel = ({ prop, _id }) => {
     {
       label: "@outlook.com",
       value: "@outlook.com",
+    },
+  ];
+  const options2 = [
+    {
+      label: "abcd",
+      value: "abcd",
+    },
+    {
+      label: "efgh",
+      value: "efgh",
+    },
+    {
+      label: "ijkl",
+      value: "ijkl",
     },
   ];
   const dropDownvalue = useSelector(
@@ -66,10 +81,21 @@ const AssignedModel = ({ prop, _id }) => {
           className="w-full"
           placeholder="select users & groups only"
           defaultValue={dropDownvalue}
+          onSearch={(input)=>{
+            if (input.startsWith("@")) {
+              setAddOption(options);
+            } else if (input.startsWith("#")) {
+              setAddOption(options2);
+            } else {
+              setAddOption([]);
+            }
+          }}
           onChange={(Value) => {
             setDdvalue(Value);
           }}
-          options={options}
+          options={addOption}
+          showSearch
+          filterOption={false}
         />
       </Modal>
     </>

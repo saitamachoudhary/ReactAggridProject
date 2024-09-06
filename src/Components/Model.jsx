@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button, Modal, notification } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import Group from "./Group";
-import Conditions from "./Conditions";
 import {
   makegroupconditionsFill,
   makegroupconditionsEmpty,
@@ -20,9 +19,6 @@ const Model = ({ _id }) => {
     (state) => state.groupConditon.groupconditions
   );
   const dispatch = useDispatch();
-  const addConditions = () => {
-    dispatch(addconditions());
-  };
 
   const addGroup = () => {
     dispatch(addgroups());
@@ -32,7 +28,6 @@ const Model = ({ _id }) => {
       <h4>Security conditions</h4>
       <div className="flex gap-3">
         <Button onClick={addGroup}>+Group</Button>
-        <Button onClick={addConditions}>+Conditions</Button>
       </div>
     </div>
   );
@@ -111,12 +106,10 @@ const Model = ({ _id }) => {
                 create your filters.
               </h2>
             ) : (
-              components.map((component) => {
-                const { type, id } = component;
+              components.map((component,index) => {
+                const { type, id} = component;
                 if (type === "group") {
-                  return <Group key={id} id={id} _idP={_id} />;
-                } else if (type === "conditions") {
-                  return <Conditions key={id} id={id} ele={component} />;
+                  return <Group key={id} id={id} _idP={_id} index={index} />;
                 } else {
                   return null;
                 }

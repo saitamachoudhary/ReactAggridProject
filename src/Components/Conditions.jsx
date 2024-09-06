@@ -1,12 +1,13 @@
 import { Select, InputNumber } from "antd";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
+import SelectdropDown from "./SelectdropDown";
 import {
   addconditonsvalues,
   deleteconditions,
 } from "../Store/group&conditionSlice";
 import { useDispatch } from "react-redux";
-const Conditions = ({ id, ele }) => {
+const Conditions = ({ id, ele, index }) => {
   const [manipuldateFormele, setManipuldateFormele] = useState(false);
   const dispatch = useDispatch();
   const options1 = [
@@ -29,18 +30,26 @@ const Conditions = ({ id, ele }) => {
       label: "=",
     },
     {
-      value: "And",
-      label: "And",
+      value: "!=",
+      label: "!=",
     },
     {
-      value: "Or",
-      label: "Or",
+      value: "IN",
+      label: "IN",
+    },
+    {
+      value: "NOT IN",
+      label: "NOT IN",
     },
   ];
   const options3 = [
     {
       value: "=",
       label: "=",
+    },
+    {
+      value: "!=",
+      label: "!=",
     },
     {
       value: "AND",
@@ -55,12 +64,28 @@ const Conditions = ({ id, ele }) => {
       label: "<",
     },
     {
+      value: "<=",
+      label: "<=",
+    },
+    {
       value: ">",
       label: ">",
     },
     {
-      value: "NOT",
-      label: "NOT",
+      value: ">=",
+      label: ">=",
+    },
+    {
+      value: "IN",
+      label: "IN",
+    },
+    {
+      value: "NOT IN",
+      label: "NOT IN",
+    },
+    {
+      value: "Between",
+      label: "Not Between",
     },
   ];
   const stateOptions = [
@@ -88,7 +113,13 @@ const Conditions = ({ id, ele }) => {
     );
   };
   return (
-    <div className="w-full p-2 flex items-center justify-between gap-2">
+    <div className="flex flex-col justify-start gap-2 p-2">
+      {
+        index>0?(
+        <SelectdropDown id={id} ele={ele}/>
+        ):null
+      }
+      <div className="w-full flex items-center justify-between gap-2">
       <div className="flex w-full gap-2 bg-[#FAF5FF] p-2 rounded-md border-2">
         <Select
           className="w-full text-left"
@@ -143,6 +174,7 @@ const Conditions = ({ id, ele }) => {
           dispatch(deleteconditions({ id: id }));
         }}
       />
+    </div>
     </div>
   );
 };
